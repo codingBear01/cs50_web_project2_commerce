@@ -361,7 +361,7 @@ def listing(request, title):
             "mine": mine,
             "bids": bids,
             "comments": comments,
-            "test": winnerStatus,
+            "winnerStatus": winnerStatus,
         },
     )
 
