@@ -1,0 +1,76 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+  {% if alertMsg %}
+    <h1>{{ alertMsg }}</h1>
+  {% else %}
+    <div class="main_wrapper">
+      <div class="categories_box">
+        <h3>Categories</h3>
+
+        <ul>
+          {% for watchList in watchListings %}
+            <li>
+              <a href="{% url 'filteredWatchList' watchList.category %}">
+                {{ watchList.category }}
+              </a>
+            </li>
+            {% endfor%}
+          </ul>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            {% if filteredWatchListings %}
+              {% for watchList in filteredWatchListings %}
+                <div class="col main_listings">
+                  <a href="{% url 'listing' watchList.watchListings.title %}">
+                    <div class="main_img_box img_box" style="background-image: url('{{ watchList.watchListings.imageURL }}')"></div>
+
+                    <div class="product_contents">
+                      <span>Product Name:
+                        {{ watchList.watchListings.title }}</span>
+                      <span>Category:
+                        {{ watchList.category }}</span>
+                      <div class="bid_box">
+                        <span style="color: green">Start Bid:
+                          {{ watchList.watchListings.startBid }}</span>
+                        <span style="color: red">Current Bid:
+                          {{ watchList.watchListings.currentBid }}</span>
+                      </div>
+                      <div class="product_desc">{{ watchList.watchListings.description }}</div>
+                    </div>
+                  </a>
+                </div>
+                {% endfor%}
+
+              {% else %}
+
+                {% for watchList in watchListings%}
+                  <div class="col main_listings">
+                    <a href="{% url 'listing' watchList.watchListings.title %}">
+                      <div class="main_img_box img_box" style="background-image: url('{{ watchList.watchListings.imageURL }}')"></div>
+
+                      <div class="product_contents">
+                        <span>Product Name:
+                          {{ watchList.watchListings.title }}</span>
+                        <span>Category:
+                          {{ watchList.category }}</span>
+                        <div class="bid_box">
+                          <span style="color: green">Start Bid:
+                            {{ watchList.watchListings.startBid }}</span>
+                          <span style="color: red">Current Bid:
+                            {{ watchList.watchListings.currentBid }}</span>
+                        </div>
+                        <div class="product_desc">{{ watchList.watchListings.description }}</div>
+                      </div>
+                    </a>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endblock %}

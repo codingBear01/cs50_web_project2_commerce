@@ -1,0 +1,83 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+  <div class="main_wrapper">
+    <div class="categories_box">
+      <h3>Categories</h3>
+
+      <ul>
+        {% for category in categories %}
+          <li>
+            <a href="{% url 'filtered' category %}">{{ category }}
+            </a>
+          </li>
+          {% endfor%}
+        </ul>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          {% if filteredListings%}
+            {% for listing in filteredListings %}
+              <div class="col main_listings">
+                <a href="{% url 'listing' listing.title %}">
+                  {% if listing.status_closed %}
+                    <div class="main_img_box img_box" style="background-image: url('{{ listing.imageURL }}')">
+                      <div class="inactive">
+                        <span>No longer Active</span></div>
+                    </div>
+                  {% else %}
+                    <div class="main_img_box img_box" style="background-image: url('{{ listing.imageURL }}')"></div>
+                    {% endif%}
+                    <div class="product_contents">
+                      <span>Product Name:
+                        {{ listing.title }}</span>
+                      <span>Category:
+                        {{ listing.category }}</span>
+                      <div class="bid_box">
+                        <span style="color: green">Start Bid:
+                          {{ listing.startBid }}</span>
+                        <span style="color: red">Current Bid:
+                          {{ listing.currentBid }}</span>
+                      </div>
+                      <div class="product_desc">{{ listing.description }}</div>
+                    </div>
+                  </a>
+                </div>
+                {% endfor%}
+
+              {% else %}
+                {% for listing in listings %}
+                  <div class="col main_listings">
+                    <a href="{% url 'listing' listing.title %}">
+                      {% if listing.status_closed %}
+                        <div class="main_img_box img_box" style="background-image: url('{{ listing.imageURL }}')">
+                          <div class="inactive">
+                            <span>No longer Active</span></div>
+                        </div>
+                      {% else %}
+                        <div class="main_img_box img_box" style="background-image: url('{{ listing.imageURL }}')"></div>
+                        {% endif%}
+
+                        <div class="product_contents">
+                          <span>Product Name:
+                            {{ listing.title }}</span>
+                          <span>Category:
+                            {{ listing.category }}</span>
+                          <div class="bid_box">
+                            <span style="color: green">Start Bid:
+                              {{ listing.startBid }}</span>
+                            <span style="color: red">Current Bid:
+                              {{ listing.currentBid }}</span>
+                          </div>
+                          <div class="product_desc">{{ listing.description }}</div>
+                        </div>
+                      </a>
+                    </div>
+                    {% endfor%}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endblock %}

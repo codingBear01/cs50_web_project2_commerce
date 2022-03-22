@@ -1,0 +1,52 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+  <h1>Create Your Listing</h1>
+
+  {% if alertMsg %}
+    <div class="alert alert-danger" role="alert">
+      {{ alertMsg }}
+    </div>
+  {% endif %}
+
+  <form method="POST">
+    {% csrf_token%}
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" name="create_title" id="create_title" placeholder="Title" value="{{ title }}" required="required"/>
+      <label for="create_title">Title</label>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input type="number" class="form-control" name="create_bid" id="create_bid" placeholder="Start Bid" value="{{ startBid }}" required="required"/>
+      <label for="create_bid">Start Bid
+        <span style="color:red">not more than 10,000,000 won</span></label>
+    </div>
+
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" name="create_image" id="create_image" placeholder="Image URL" value="{{ imageURL }}" required="required"/>
+      <label for="create_image">Image URL</label>
+    </div>
+
+    <div class="form-floating mb-3">
+      <select class="form-select" id="create_category" name="create_category" aria-label="Floating label select example" required="required">
+        {% for category in categories %}
+          <option value="{{ category }}">{{ category }}</option>
+          {% endfor%}
+        </select>
+        <label for="create_category">Categories</label>
+      </div>
+
+      <div class=" form-floating mb-3">
+        <textarea class="form-control" name="create_description" id="create_description" rows="20" columns="20" placeholder="Product Description" required="required">{{ description }}</textarea>
+        <label for="create_description" class="form-label">Product Description</label>
+      </div>
+
+      <div class="create_button_wrapper wrapper">
+        <input type="submit" class="btn btn-success" value="Save">
+        <a href="{% url 'index' %}">
+          <button type="button" class="btn btn-success">Cancel</button>
+        </a>
+      </div>
+    </form>
+  {% endblock %}

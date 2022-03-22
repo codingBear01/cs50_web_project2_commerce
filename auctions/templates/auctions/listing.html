@@ -1,0 +1,147 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+  {% if listing.status_closed %}
+    <div class="listing_wrapper">
+      <div class="listing_info">
+        <div class="listing_img_box img_box" style="background-image: url('{{ listing.imageURL }}')">
+          <div class="inactive">
+            <span>No longer Active</span></div>
+        </div>
+
+        <div class="listing_summary_info">
+          <div>Product Name:
+            {{ listing.title }}</div>
+          <div>Category:
+            <a href="{% url 'filtered' listing.category %}">{{ listing.category }}</a>
+          </div>
+          <div>Start Bid:
+            {{ listing.startBid }}
+            ￦</div>
+          <div>Current Bid:
+            {{ listing.currentBid }}
+            ￦</div>
+          {% if listing.winnerStatus %}
+            <div class="alert alert-primary" role="alert">
+              You are the winner of this listing!
+            </div>
+          {% else %}
+            <div class="alert alert-danger" role="alert">This listing is no longer active!</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  {% else %}
+
+    <div class="listing_wrapper">
+      <div class="listing_info">
+        <div class="listing_img_box img_box" style="background-image: url('{{ listing.imageURL }}')"></div>
+
+        <div class="listing_summary_info">
+          <div>Product Name:
+            {{ listing.title }}</div>
+          <div>Category:
+            <a href="{% url 'filtered' listing.category %}">{{ listing.category }}</a>
+          </div>
+          <div>Start Bid:
+            {{ listing.startBid }}
+            ￦</div>
+          <div>Current Bid:
+            {{ listing.currentBid }}
+            ￦</div>
+
+          {% if alertMsg %}
+            <div class="alert alert-danger" role="alert">
+              {{ alertMsg }}
+            </div>
+            {% endif%}
+
+            {% if successMsg %}
+              <div class="alert alert-primary" role="alert">
+                {{ successMsg }}
+              </div>
+              {% endif%}
+
+              <form action="{% url 'listing' listing.title %}" method="POST">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                  <input type="number" class="form-control" name="current_bid" placeholder="Please put less than 10,000,000 won">
+                  <label for=" floatingInput" style="color:red">Please put your bid less than 10,000,000 won</label>
+                </div>
+
+                <div class="lisiting_button_box">
+                  <input type="submit" class="submit_button" name="put_bid" value="put bid">
+                  {% if listing.status_listed %}
+                    <input type="submit" class="submit_button remove_watch_list_button" name="watch_list_button" value="remove from watchlist">
+                  {% else %}
+                    <input type="submit" class="submit_button add_watch_list_button" name="watch_list_button" value="add to watchlist">
+                  {% endif %}
+                  {% if listing in userListing %}
+                    <input type="submit" class="close_list_button" name="close_list_button" value="close this listing">
+                  {% endif %}
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {% if mine %}
+            <div class="bids_box">
+              <h3>Bids on this listing</h3>
+              {% for bid in bids %}
+                <div>
+                  {{ bid.participant }}
+                  placed bids at
+                  {{ bid.bid }}
+                  ￦</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div>
+            {{ test }}</div>
+
+          <div class=" listing_desc_box">{{ listing.description }}
+          </div>
+          <div>{{ winnerStatus }}</div>
+          <div class="comment_wrapper">
+            <h4>Comments</h4>
+            {% for comment in comments%}
+              <div class="comment_box">
+
+                <div class="comment_info">
+                  <div class="comment_author">
+                    Author:
+                    {{ comment.author }}
+                  </div>
+                  <div class="comennt_date">
+                    Date:
+                    {{ comment.timestamp }}
+                  </div>
+                </div>
+
+                <div class="comment_content">
+                  {{ comment.comment }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          {% if commentAlertMsg %}
+            <div class="alert alert-danger" role="alert">
+              {{ commentAlertMsg }}
+            </div>
+          {% endif %}
+
+          <form action="{% url 'listing' listing.title %}" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="comment_textarea" class="form-label">Leave Your Comment</label>
+              <textarea class="form-control" name="comment_area" id="comment_textarea" rows="5"></textarea>
+            </div>
+            <input type="submit" class="submit_button" name="comment_submit" value="save">
+          </form>
+        </div>
+      {% endif %}
+    {% endblock %}
